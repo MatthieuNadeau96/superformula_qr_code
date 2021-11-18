@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:superformula_qr_code/screens/home_screen.dart';
+import 'package:superformula_qr_code/shared/routing.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,6 +16,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      onGenerateRoute: (route) {
+        print('route name => ${route.name}');
+        return Routing().getRoutes(route);
+      },
       home: const HomeScreen(),
     );
   }

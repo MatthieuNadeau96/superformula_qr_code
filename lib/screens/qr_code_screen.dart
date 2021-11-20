@@ -25,62 +25,63 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
         title: const Text('QR Code'),
         centerTitle: true,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          FutureBuilder<SeedModel>(
-            future: _future,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
+      body: StreamBuilder<dynamic>(
+          stream: _countdown,
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+              case ConnectionState.waiting:
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
-              }
-              if (snapshot.hasData) {
-                var seed = snapshot.data!.seed;
-                // TODO If times up, disable qr code
-                return Center(
-                  child: QrImage(
-                    data: seed,
-                    size: 250,
-                  ),
-                );
-              }
-              return const Center(
-                child: Text('Something went wrong'),
-              );
-            },
-          ),
-          const SizedBox(height: 30),
-          StreamBuilder<int>(
-              stream: _countdown,
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.none:
-                  case ConnectionState.waiting:
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  case ConnectionState.active:
-                    if (snapshot.hasData) {
-                      var count = snapshot.data;
-
-                      return Text('$count s');
-                    }
-                    break;
-                  // TODO Create restart button
-                  case ConnectionState.done:
-                    return const Text('Times up!');
-                  default:
+              case ConnectionState.active:
+                if (snapshot.hasData) {
+                  var count = snapshot.data;
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FutureBuilder<SeedModel>(
+                        future: _future,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          if (snapshot.hasData) {
+                            var seed = snapshot.data!.seed;
+                            return Center(
+                              child: QrImage(
+                                data: seed,
+                                size: 250,
+                              ),
+                            );
+                          }
+                          return const Center(
+                            child: Text('Something went wrong'),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 30),
+                      Text('$count s'),
+                    ],
+                  );
                 }
+                break;
+              // TODO Create restart button
+              case ConnectionState.done:
+                return const Center(
+                  child: Text('Times up!'),
+                );
+              default:
+            }
 
-                return Container();
-              })
-        ],
-      ),
+            return Container();
+          }),
     );
   }
 }
 
-Stream<int> countdown(int _count) =>
+Stream<dynamic> countdown(_count) =>
     Stream.periodic(const Duration(seconds: 1), (e) => _count - e).take(16);

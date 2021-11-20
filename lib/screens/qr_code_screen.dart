@@ -14,8 +14,9 @@ class QrCodeScreen extends StatefulWidget {
 }
 
 class _QrCodeScreenState extends State<QrCodeScreen> {
-  // Initialize api call & countdown stream outside of the build widget
+  // To avoid unecessary rebuilds, initialize api call & countdown stream outside of the build widget
   final Future<SeedModel> _future = ApiService().getSeed();
+
   static const int _count = 15;
   final Stream<int> _countdown = countdown(_count);
 
@@ -35,6 +36,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
+              // if our connection state (countdown stream) is active and has data we display the qr code and the countdown timer
               case ConnectionState.active:
                 if (snapshot.hasData) {
                   var count = snapshot.data;
@@ -70,6 +72,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                   );
                 }
                 break;
+              // if our connectionstate (countdown stream) is done we display text and the refresh button
               case ConnectionState.done:
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -80,6 +83,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                     const SizedBox(height: 5),
                     TextButton(
                       onPressed: () {
+                        // refreshes by replacing the current route to reinitialize the getSeed call and stream countdown
                         Navigator.pushReplacementNamed(
                             context, AppRoutes.qrCodeScreen);
                       },
@@ -89,12 +93,12 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                 );
               default:
             }
-
             return Container();
           }),
     );
   }
 }
 
-Stream<int> countdown(int _count) =>
-    Stream.periodic(const Duration(seconds: 1), (e) => _count - e).take(16);
+// countdown starts from count param (ie 15), and ends after 16 1 second intervals(ie 0)
+Stream<int> countdown(int count) =>
+    Stream.periodic(const Duration(seconds: 1), (e) => count - e).take(16);

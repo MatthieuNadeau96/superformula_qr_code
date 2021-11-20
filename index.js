@@ -13,17 +13,16 @@ app.get('/seed', (req, res) => {
 
     const currentTime = new Date().getTime();
 
-
-    // Generates expiration date
+    // Generates expiration date. Adding 15 seconds to current time
     let expirationTime = currentTime + 15000;
 
     let expirationDate = new Date(expirationTime).toISOString();
 
-    console.log(`current date = ${new Date()}`);
     console.log(`expirationDate = ${expirationDate}`);
 
     // Generates random seed
     let seedGen = Math.random().toString(36).substr(2, 3) + Math.random().toString(36).substr(2, 3) + Math.random().toString(36).substr(2, 3) + Math.random().toString(36).substr(2, 3) + Math.random(36).toString().substr(2, 4);
+
     res.status(200).send({
         seed: seedGen,
         description: 'seed generated',

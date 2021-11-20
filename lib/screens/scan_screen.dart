@@ -16,6 +16,8 @@ class _ScanScreenState extends State<ScanScreen> {
   Barcode? result;
   QRViewController? controller;
 
+  // this reassemble block is required for hot reload to work
+  // if the platform is Android we pause the camera and if the platform is iOS we resume
   @override
   void reassemble() {
     super.reassemble();
@@ -28,6 +30,7 @@ class _ScanScreenState extends State<ScanScreen> {
 
   @override
   void dispose() {
+    // dispose our camera (QRView) controller to avoid any sort of memory leaks
     controller?.dispose();
     super.dispose();
   }
@@ -43,6 +46,7 @@ class _ScanScreenState extends State<ScanScreen> {
       body: Stack(
         alignment: Alignment.center,
         children: [
+          // QrCodeScanner with some overlay styling
           QRView(
             key: qrKey,
             onQRViewCreated: _onQRViewCreated,
@@ -53,6 +57,7 @@ class _ScanScreenState extends State<ScanScreen> {
               borderWidth: 8,
             ),
           ),
+          // Place text below the QrView overlay to display the code result
           Positioned(
             bottom: 60,
             child: Container(

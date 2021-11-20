@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:superformula_qr_code/models/seed_model.dart';
 import 'package:superformula_qr_code/services/api_service.dart';
+import 'package:superformula_qr_code/shared/app_routes.dart';
 
 class QrCodeScreen extends StatefulWidget {
   const QrCodeScreen({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
   // Initialize api call & countdown stream outside of the build widget
   final Future<SeedModel> _future = ApiService().getSeed();
   static const int _count = 15;
-  final _countdown = countdown(_count);
+  final Stream<int> _countdown = countdown(_count);
 
   @override
   Widget build(BuildContext context) {
@@ -69,10 +70,22 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                   );
                 }
                 break;
-              // TODO Create restart button
               case ConnectionState.done:
-                return const Center(
-                  child: Text('Times up!'),
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Center(
+                      child: Text('Times up!'),
+                    ),
+                    const SizedBox(height: 5),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(
+                            context, AppRoutes.qrCodeScreen);
+                      },
+                      child: const Text('Get a new code'),
+                    ),
+                  ],
                 );
               default:
             }
@@ -83,5 +96,5 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
   }
 }
 
-Stream<dynamic> countdown(_count) =>
+Stream<int> countdown(int _count) =>
     Stream.periodic(const Duration(seconds: 1), (e) => _count - e).take(16);

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:superformula_qr_code/models/seed_model.dart';
 import 'package:superformula_qr_code/services/api_service.dart';

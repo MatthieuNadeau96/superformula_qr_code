@@ -14,9 +14,9 @@ class QrCodeScreen extends StatefulWidget {
 
 class _QrCodeScreenState extends State<QrCodeScreen> {
   // Initialize api call & countdown stream outside of the build widget
-  final Future<SeedModel> _future =
-      ApiService().getSeed().timeout(const Duration(seconds: 15));
-  final _countdown = countdown();
+  final Future<SeedModel> _future = ApiService().getSeed();
+  static const int _count = 15;
+  final _countdown = countdown(_count);
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +82,5 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
   }
 }
 
-// TODO Reverse timer so that it counts down from 15
-Stream<int> countdown() =>
-    Stream.periodic(const Duration(seconds: 1), (e) => e + 1).take(15);
+Stream<int> countdown(int _count) =>
+    Stream.periodic(const Duration(seconds: 1), (e) => _count - e).take(16);

@@ -16,7 +16,9 @@ void main() {
       final client = MockClient();
       // return a successful response when we call the provided http.Client
       when(client.get(Uri.parse('http://192.168.1.242:8080/seed'))).thenAnswer(
-          (_) async => http.Response('{"description": "seed generated"}', 200));
+          (_) async => http.Response(
+              '{"seed": "d43397d129c3de9e4b6c3974c1c16d1f", "description": "seed generated", "expires_at" : "1979-11-12T13:10:42.24Z"}',
+              200));
 
       expect(await ApiService().getSeed(client), isA<SeedModel>());
     });

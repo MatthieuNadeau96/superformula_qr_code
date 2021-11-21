@@ -5,6 +5,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:superformula_qr_code/models/seed_model.dart';
 import 'package:superformula_qr_code/services/api_service.dart';
 import 'package:superformula_qr_code/shared/app_routes.dart';
+import 'package:http/http.dart' as http;
 
 class QrCodeScreen extends StatefulWidget {
   const QrCodeScreen({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class QrCodeScreen extends StatefulWidget {
 
 class _QrCodeScreenState extends State<QrCodeScreen> {
   // To avoid unecessary rebuilds, initialize api call & countdown stream outside of the build widget
-  final Future<SeedModel> _future = ApiService().getSeed();
+  final Future<SeedModel> _future = ApiService().getSeed(http.Client());
 
   static const int _count = 15;
   final Stream<int> _countdown = countdown(_count);

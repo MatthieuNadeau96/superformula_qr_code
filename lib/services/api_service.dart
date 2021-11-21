@@ -10,8 +10,10 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
+      // parse json if server returns 200 OK response
       return SeedModel.fromJson(jsonDecode(response.body));
     } else {
+      // throw an exception if server does not return 200
       throw Exception('Failed to create seed');
     }
   }

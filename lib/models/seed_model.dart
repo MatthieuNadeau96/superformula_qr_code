@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class SeedModel {
   final String seed;
   final String description;
